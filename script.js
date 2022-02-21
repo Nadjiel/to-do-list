@@ -33,6 +33,11 @@ class Tarefa {
     compararId(string) {
         return string === this.id;
     }
+
+    alternarStatus() {
+        if(this.status === "pendente") this.status = "concluida";
+        else this.status = "pendente";
+    }
 }
 
 function adicionarEventoEmElementos(evento, callback, ...elementos) {
@@ -71,7 +76,7 @@ function pesquisarTarefas() {
     });
 }
 
-function acharTarefaComId(id) {
+function acharTarefa(id) {
     for(const tarefa of tarefas) {
         if(tarefa.compararId(id)) {
             return tarefas.indexOf(tarefa);
@@ -82,20 +87,29 @@ function acharTarefaComId(id) {
 function manusearClickEmTarefa(e) {
     const inputTarefa = e.target;
     const divTarefa = inputTarefa.parentNode;
-    const indexTarefa = acharTarefaComId(inputTarefa.id);
-    
-    if(inputTarefa.checked) {
-        listaTarefasConcluidas.insertBefore(divTarefa, listaTarefasConcluidas.children[0]);
-        tarefas[indexTarefa].status = "concluida";
+    const indexTarefa = acharTarefa(inputTarefa.id);
+
+    if(e.ctrlKey) {
+        if(inputTarefa.checked) {
+            listaTarefasPendentes.removeChild(divTarefa);
+        }
+        else {
+            listaTarefasConcluidas.removeChild(divTarefa);
+        }
+        tarefas.splice(indexTarefa, 1);
     }
     else {
-        listaTarefasConcluidas.removeChild(divTarefa);
-        listaTarefasPendentes.appendChild(divTarefa);
-        tarefas[indexTarefa].status = "pendente";
+        if(inputTarefa.checked) {
+            listaTarefasConcluidas.insertBefore(divTarefa, listaTarefasConcluidas.children[0]);
+        }
+        else {
+            listaTarefasConcluidas.removeChild(divTarefa);
+            listaTarefasPendentes.appendChild(divTarefa);
+        }
+        tarefas[indexTarefa].alternarStatus();
     }
 }
 //=====~~~~~=====+++++|+++++=====~~~~~=====//
-//deletar tarefas
 //guardar na memoria
 //criar tarefas de volta quando nao houver texto no input de busca inves de ao apertar no botao
 
