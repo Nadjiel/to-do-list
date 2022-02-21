@@ -4,40 +4,42 @@ class Tarefa {
         this.id = id;
         this.status = status;
     }
+}
 
-    adicionarNaLista() {
-        const div = document.createElement("div");
-        const input = document.createElement("input");
-        input.type = "checkbox";
-        input.id = this.id;
-        input.onclick = manusearClickEmTarefa;
-        const label = document.createElement("label");
-        label.htmlFor = input.id;
-        label.innerText = this.nome;
+function adicionarNaLista(tarefa) {
+    const div = document.createElement("div");
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.id = tarefa.id;
+    input.onclick = manusearClickEmTarefa;
+    const label = document.createElement("label");
+    label.htmlFor = input.id;
+    label.innerText = tarefa.nome;
 
-        div.appendChild(input);
-        div.appendChild(label);
-        switch(this.status) {
-            case "pendente":
-                listaTarefasPendentes.appendChild(div);
-                break;
-            case "concluida": listaTarefasConcluidas.appendChild(div);
-        }
+    div.appendChild(input);
+    div.appendChild(label);
+    switch(tarefa.status) {
+        case "pendente":
+            listaTarefasPendentes.appendChild(div);
+            break;
+        case "concluida":
+            listaTarefasConcluidas.appendChild(div);
+            input.checked = true;
     }
+}
 
-    ehPendente() {
-        if(this.status === "pendente") return true;
-        else return false;
-    }
+function ehPendente(tarefa) {
+    if(tarefa.status === "pendente") return true;
+    else return false;
+}
 
-    compararId(string) {
-        return string === this.id;
-    }
+function compararId(tarefa, string) {
+    return string === tarefa.id;
+}
 
-    alternarStatus() {
-        if(this.status === "pendente") this.status = "concluida";
-        else this.status = "pendente";
-    }
+function alternarStatus(tarefa) {
+    if(tarefa.status === "pendente") tarefa.status = "concluida";
+    else tarefa.status = "pendente";
 }
 
 function adicionarEventoEmElementos(evento, callback, ...elementos) {
@@ -50,13 +52,14 @@ function criarNovaTarefa(nome) {
     if(!nome) nome = inputs.novaTarefa.value;
 
     tarefas.push(new Tarefa(nome, `tarefa${tarefas.length}`, "pendente"));
-    tarefas[tarefas.length-1].adicionarNaLista();
+    salvarTarefas();
+    adicionarNaLista(tarefas[tarefas.length-1]);
 }
 
 function criarTarefasDeVolta() {
     tarefas.forEach((tarefa) => {
         if(!document.getElementById(tarefa.id)) {
-            tarefa.adicionarNaLista();
+            adicionarNaLista(tarefa);
         }
     });
 }
@@ -65,7 +68,7 @@ function pesquisarTarefas() {
     tarefas.forEach((tarefa) => {
         if(!tarefa.nome.toLowerCase().includes(inputs.buscarTarefa.value.toLowerCase())) {
             if(document.getElementById(`${tarefa.id}`)) {
-                if(tarefa.ehPendente()) {
+                if(ehPendente(tarefa)) {
                     listaTarefasPendentes.removeChild(document.getElementById(`${tarefa.id}`).parentNode);
                 }
                 else {
@@ -78,10 +81,76 @@ function pesquisarTarefas() {
 
 function acharTarefa(id) {
     for(const tarefa of tarefas) {
-        if(tarefa.compararId(id)) {
+        if(compararId(tarefa, id)) {
             return tarefas.indexOf(tarefa);
         }
     }
+}
+
+function stringifyItensDeArray(array) {
+    array.forEach((item, i) => {
+        array[i] = JSON.stringify(item);
+    });
+
+    return array;
+}
+
+function unstringifyItensDeArray(array) {
+    array.forEach((item, i) => {
+        array[i] = JSON.parse(item);
+    });
+
+    return array;
+}
+
+function salvarTarefas() {
+    if(!localStorage.tarefas){
+        localStorage.tarefas = JSON.stringify([]);
+    }
+    let tarefasSalvas = JSON.parse(localStorage.tarefas);
+
+    tarefasSalvas = stringifyItensDeArray(tarefasSalvas);
+
+    for(const tarefa of tarefas) {
+        if(tarefasSalvas.indexOf(JSON.stringify(tarefa)) === -1) {
+            tarefasSalvas.push(JSON.stringify(tarefa));
+        }
+    }
+
+    tarefasSalvas = unstringifyItensDeArray(tarefasSalvas);
+
+    localStorage.tarefas = JSON.stringify(tarefasSalvas);
+}
+
+function excluirTarefa(tarefa) {
+    let tarefasSalvas = JSON.parse(localStorage.tarefas);
+
+    tarefasSalvas = stringifyItensDeArray(tarefasSalvas);
+
+    const indexTarefaExcluida = tarefasSalvas.indexOf(JSON.stringify(tarefa));
+
+    tarefasSalvas.splice(indexTarefaExcluida, 1);
+
+    tarefasSalvas = unstringifyItensDeArray(tarefasSalvas);
+
+    localStorage.tarefas = JSON.stringify(tarefasSalvas);
+
+    if(localStorage.tarefas === "[]") delete localStorage.tarefas;
+}
+
+function atualizarTarefa(tarefa) {
+    let tarefasSalvas = JSON.parse(localStorage.tarefas);
+
+    tarefasSalvas = stringifyItensDeArray(tarefasSalvas);
+
+    const indexTarefaAlterada = tarefasSalvas.indexOf(JSON.stringify(tarefa));
+
+    tarefasSalvas = unstringifyItensDeArray(tarefasSalvas);
+
+    console.log(tarefasSalvas, indexTarefaAlterada, tarefasSalvas[indexTarefaAlterada])
+    alternarStatus(tarefasSalvas[indexTarefaAlterada]);
+
+    localStorage.tarefas = JSON.stringify(tarefasSalvas);
 }
 
 function manusearClickEmTarefa(e) {
@@ -96,6 +165,7 @@ function manusearClickEmTarefa(e) {
         else {
             listaTarefasConcluidas.removeChild(divTarefa);
         }
+        excluirTarefa(tarefas[indexTarefa]);
         tarefas.splice(indexTarefa, 1);
     }
     else {
@@ -106,11 +176,11 @@ function manusearClickEmTarefa(e) {
             listaTarefasConcluidas.removeChild(divTarefa);
             listaTarefasPendentes.appendChild(divTarefa);
         }
-        tarefas[indexTarefa].alternarStatus();
+        atualizarTarefa(tarefas[indexTarefa]);
+        alternarStatus(tarefas[indexTarefa]);
     }
 }
 //=====~~~~~=====+++++|+++++=====~~~~~=====//
-//guardar na memoria
 //criar tarefas de volta quando nao houver texto no input de busca inves de ao apertar no botao
 
 const listaTarefasPendentes = document.querySelector("#tarefas-pendentes");
@@ -124,7 +194,13 @@ const botoes = {
     buscarTarefa: document.querySelector("#barra-de-busca button")
 };
 
-const tarefas = [];
+let tarefas;
+
+if(!localStorage.tarefas) tarefas = [];
+else {
+    tarefas = JSON.parse(localStorage.tarefas);
+    criarTarefasDeVolta();
+}
 
 adicionarEventoEmElementos("click", (e) => e.target.select(), inputs.novaTarefa, inputs.buscarTarefa);
 
