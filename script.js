@@ -97,7 +97,6 @@ function manusearClickEmTarefa(e) {
 //=====~~~~~=====+++++|+++++=====~~~~~=====//
 //deletar tarefas
 //guardar na memoria
-//pesquisar com enter
 //criar tarefas de volta quando nao houver texto no input de busca inves de ao apertar no botao
 
 const listaTarefasPendentes = document.querySelector("#tarefas-pendentes");
@@ -133,6 +132,9 @@ window.onkeydown = (e) => {
             case "Enter":
                 if(inputs.novaTarefa === document.activeElement) {
                     botoes.novaTarefa.onclick();
+                }
+                if(inputs.buscarTarefa === document.activeElement) {
+                    botoes.buscarTarefa.onclick();
                 }
         }
     }
