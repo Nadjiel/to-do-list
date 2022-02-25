@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg xmlns="http://www.w3.org/2000/svg" width="105" height="35">
+  <title>Dica</title>
+
+  <!--Seta-->
+  <polygon points="21,31 26,28 17,15 13,17" fill="white" stroke="black" stroke-width="1"/>
+  <polygon points="10,30 10,5 30,20" fill="white" stroke="black" stroke-width="1"/>
+
+  <!--Igual-->
+  <polyline points="75,7 77,30 98,30 100,7" fill="none" stroke="white" stroke-width="2"/>
+  <line x1="84" x2="83" y1="30" y2="10" stroke="white" stroke-width="2"/>
+  <line x1="91" x2="92" y1="30" y2="10" stroke="white" stroke-width="2"/>
+  <line x1="75" x2="100" y1="5" y2="5" stroke="white" stroke-width="2"/>
+  <rect x="83" y="2" width="10" height="2" stroke="none" fill="white"/>
+
+  <!--Lixeira-->
+  <line x1="40" x2="65" y1="12" y2="12" stroke="rgb(255, 255, 255)" stroke-width="5"/>
+  <line x1="40" x2="65" y1="22" y2="22" stroke="rgb(255, 255, 255)" stroke-width="5"/>
+</svg>
