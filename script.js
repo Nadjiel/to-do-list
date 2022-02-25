@@ -76,6 +76,11 @@ function pesquisarTarefas() {
                 }
             }
         }
+        else {
+            if(!document.getElementById(`${tarefa.id}`)) {
+                adicionarNaLista(tarefa);
+            }
+        }
     });
 }
 
@@ -147,7 +152,6 @@ function atualizarTarefa(tarefa) {
 
     tarefasSalvas = unstringifyItensDeArray(tarefasSalvas);
 
-    console.log(tarefasSalvas, indexTarefaAlterada, tarefasSalvas[indexTarefaAlterada])
     alternarStatus(tarefasSalvas[indexTarefaAlterada]);
 
     localStorage.tarefas = JSON.stringify(tarefasSalvas);
@@ -180,8 +184,7 @@ function manusearClickEmTarefa(e) {
         alternarStatus(tarefas[indexTarefa]);
     }
 }
-//=====~~~~~=====+++++|+++++=====~~~~~=====//
-//criar tarefas de volta quando nao houver texto no input de busca inves de ao apertar no botao
+//-------------------------------------Fluxo-Principal-------------------------------------//
 
 const listaTarefasPendentes = document.querySelector("#tarefas-pendentes");
 const listaTarefasConcluidas = document.querySelector("#tarefas-concluidas");
@@ -208,12 +211,18 @@ botoes.novaTarefa.onclick = () => {
     if(inputs.novaTarefa.value) criarNovaTarefa();
 }
 
-botoes.buscarTarefa.onclick = () => {
-    if(!inputs.buscarTarefa.value) {
-        criarTarefasDeVolta();
-    }
+botoes.buscarTarefa.onclick = () => pesquisarTarefas();
 
-    pesquisarTarefas();
+let buscaAtiva = false;
+
+window.onclick = () => {
+    if(inputs.buscarTarefa === document.activeElement) buscaAtiva = true;
+    else if(buscaAtiva === true) {
+        buscaAtiva = false;
+        if(!inputs.buscarTarefa.value) {
+            criarTarefasDeVolta();
+        }
+    }
 }
 
 window.onkeydown = (e) => {

@@ -42,6 +42,7 @@ body {
     padding: 30px;
     border-radius: 10px;
     box-shadow: 5px 5px 5px 1px rgb(0, 0, 0, 0.3);
+    position: relative;
     display: grid;
     grid-template-columns: calc(50% - 15px) calc(50% - 15px);
     gap: 30px;
@@ -74,6 +75,11 @@ body {
     width: 45px;
     height: 45px;
     border-radius: 5px;
+    background-color: white;
+    background-image: url(imagens/lupa.svg);
+    background-size: 80%;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 #gerenciador, #coluna2 {
@@ -94,6 +100,8 @@ body {
 #adicionar-tarefa button {
     width: 30px;
     height: 30px;
+    background-color: rgb(97, 170, 97);
+    background-image: url(imagens/mais.svg);
 }
 
 input[type="text"] {
@@ -124,15 +132,17 @@ input[type="text"] {
 #lista-de-afazeres label {
     font-size: 1.3rem;
     text-decoration: none;
+    overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
 }
 
-#tarefas-pendentes input:hover + label, #tarefas-concluidas input:hover + label {
+#tarefas-pendentes input:hover + label {
     animation: 250ms slide-direita ease-out forwards;
     animation-delay: 500ms;
 }
 
-label:hover {
+#tarefas-pendentes label:hover {
     animation: 250ms slide-direita ease-out forwards;
     animation-delay: 500ms;
 }
@@ -140,6 +150,10 @@ label:hover {
 #tarefas-pendentes label, #tarefas-concluidas label {
     width: calc(100% - 32px);
     height: 30px;
+}
+
+#tarefas-concluidas label {
+    color:rgb(225, 225, 225);
 }
 
 #coluna2 {
@@ -160,6 +174,25 @@ label:hover {
     overflow-y: auto;
 }
 
+#dica {
+    width: 200px;
+    height: 60px;
+    padding: 0 7px;
+    border-radius: 3px 3px 0 0;
+    font-size: 2rem;
+    position: absolute;
+    top: -60px;
+    left: 60px;
+    display: flex;
+    align-items: center;
+    background-color: rgb(208, 151, 75);
+    background-image: url(imagens/Dica.svg);
+    background-repeat: no-repeat;
+    background-position-x: right 7px;
+    background-position-y: center;
+    cursor: default;
+}
+
 @keyframes slide-direita {
     0% {
         border-bottom: 3px solid;
@@ -172,20 +205,5 @@ label:hover {
     100% {
         border-bottom: 3px solid;
         border-image: linear-gradient(to right, rgb(255, 255, 255), rgb(255, 255, 255)) 1;
-    }
-}
-
-@keyframes slide-esquerda {
-    0% {
-        border-bottom: 5px solid;
-        border-image: linear-gradient(to right, rgb(255, 255, 255), rgb(255, 255, 255)) 1;
-    }
-    70% {
-        border-bottom: 5px solid;
-        border-image: linear-gradient(to right, rgb(218, 178, 92), rgb(255, 255, 255)) 1;
-    }
-    100% {
-        border-bottom: 5px solid;
-        border-image: linear-gradient(to right, rgb(218, 178, 92), rgb(218, 178, 92)) 1;
     }
 }
